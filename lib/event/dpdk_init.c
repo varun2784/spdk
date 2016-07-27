@@ -58,6 +58,7 @@ enum dpdk_eal_args {
 	EAL_MEMSIZE_ARG,
 	EAL_MASTER_CORE_ARG,
 	EAL_FILE_PREFIX_ARG,
+	EAL_PROC_TYPE_ARG,
 	EAL_ARG_COUNT
 };
 
@@ -158,7 +159,11 @@ spdk_build_eal_cmdline(struct spdk_app_opts *opts)
 		spdk_free_ealargs();
 		rte_exit(EXIT_FAILURE, "ealargs spdk_sprintf_alloc");
 	}
-
+	if (opts->dpdk_master_core != 0) {
+		g_arg_strings[EAL_PROC_TYPE_ARG] = spdk_sprintf_alloc("--proc-type=secondary");
+	} else {
+		g_arg_strings[EAL_PROC_TYPE_ARG] = spdk_sprintf_alloc("--proc-type=primary");
+	}
 	memcpy(g_ealargs, g_arg_strings, sizeof(g_arg_strings));
 }
 
